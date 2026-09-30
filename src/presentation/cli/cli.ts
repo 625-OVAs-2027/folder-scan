@@ -1,13 +1,13 @@
 import { envs } from "../../config/plugins/envs.plugin";
 import { ScanFolder } from "../../domain/use-cases/scan-folders/scan-folder";
 import { TakeScreenShot } from "../../domain/use-cases/take-screenshot/take-screenshot";
-import { FileSystemDataSource } from "../../infrastructure/datasources/file-system.datasource";
+import { SqliteOvaDataSource } from "../../infrastructure/datasources/sqlite-ova.datasource";
 import { OvaRepositoryImpl } from "../../infrastructure/repositories/ova.repositories.impl";
 import { EmailService } from "../../infrastructure/services/email.service";
 import { PuppeteerScreenShotService } from '../../infrastructure/services/puppeteer-screenshot.service';
 
 
-const fileSystemOvaRepository = new OvaRepositoryImpl(new FileSystemDataSource())
+const sqliteOvaRepository = new OvaRepositoryImpl(new SqliteOvaDataSource())
 const PuppeteerScreenShot = new TakeScreenShot(new PuppeteerScreenShotService(envs.SCREENSHOTS_STORAGE_PATH))
 
 export class Cli {
@@ -28,7 +28,7 @@ export class Cli {
         console.log('='.repeat(40) + '\n');
 
         new ScanFolder(
-            fileSystemOvaRepository,
+            sqliteOvaRepository,
             PuppeteerScreenShot
         ).execute(envs.SCAN_FOLDER_PATH).then((result) => {
             console.log(`✅ Scan process completed successfully! 🎉 All folders have been processed (${result.successCount} processed, ${result.skippedCount} unchanged, ${result.failureCount} failed).`);
