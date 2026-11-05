@@ -29,3 +29,12 @@ ovasRouter.get('/zip/:id', async (req, res, next) => {
         next(error)
     }
 })
+
+// Debe ir al final: '/:id' captura cualquier segmento y taparía '/groups'
+ovasRouter.get('/:id', async (req, res, next) => {
+    try {
+        await OvaController.getOvaById(req, res)
+    } catch (error) {
+        next(error)
+    }
+})
